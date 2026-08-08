@@ -493,26 +493,81 @@
         return;
       }
 
-      const rows = txs.slice(0, 25).map(t => `
-        <tr>
-          <td>${t.date}</td>
-          <td>${t.category || 'Uncategorized'}</td>
-          <td>${t.note || ''}</td>
-          <td class="amount ${t.type}">${t.type === 'expense' ? '−' : '+'}${formatTZS(t.amount)}</td>
-          <td><button class="del-btn" onclick="deleteTransaction(${t.id})">Remove</button></td>
-        </tr>
-      `).join('');
+      window._txCache = txs;
+
+      const rows = txs.slice(0, 25).map(t => renderRow(t)).join('');
 
       wrap.innerHTML = `
         <table>
           <thead>
             <tr><th>Date</th><th>Category</th><th>Note</th><th style="text-align:right">Amount</th><th></th></tr>
           </thead>
-          <tbody>${rows}</tbody>
+          <tbody id="tx-tbody">${rows}</tbody>
         </table>
       `;
     } catch (err) {
       wrap.innerHTML = '<p class="empty-state">Could not load transactions.</p>';
+    }
+  }
+
+  function renderRow(t) {
+    return `
+      <tr id="row-${t.id}">
+        <td>${t.date}</td>
+        <td>${t.category || 'Uncategorized'}</td>
+        <td>${t.note || ''}</td>
+        <td class="amount ${t.type}">${t.type === 'expense' ? '−' : '+'}${formatTZS(t.amount)}</td>
+        <td>
+          <button class="del-btn" onclick="editTransaction(${t.id})">Edit</button>
+          &nbsp;·&nbsp;
+          <button class="del-btn" onclick="deleteTransaction(${t.id})">Remove</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  function editTransaction(id) {
+    const t = (window._txCache || []).find(tx => tx.id === id);
+    if (!t) return;
+
+    const row = document.getElementById('row-' + id);
+    row.innerHTML = `
+      <td><input type="date" id="edit-date-${id}" value="${t.date}" style="width:100%;padding:6px;font-size:13px;border:1px solid var(--parchment-line);border-radius:var(--radius);"></td>
+      <td colspan="1"><input type="text" id="edit-note-${id}" value="${(t.note || '').replace(/"/g, '&quot;')}" placeholder="Note" style="width:100%;padding:6px;font-size:13px;border:1px solid var(--parchment-line);border-radius:var(--radius);"></td>
+      <td></td>
+      <td class="amount"><input type="number" id="edit-amount-${id}" value="${t.amount}" min="1" step="1" style="width:100%;padding:6px;font-size:13px;text-align:right;border:1px solid var(--parchment-line);border-radius:var(--radius);"></td>
+      <td>
+        <button class="del-btn" onclick="saveTransaction(${id})">Save</button>
+        &nbsp;·&nbsp;
+        <button class="del-btn" onclick="loadTransactions()">Cancel</button>
+      </td>
+    `;
+  }
+
+  async function saveTransaction(id) {
+    const amount = document.getElementById('edit-amount-' + id).value;
+    const date = document.getElementById('edit-date-' + id).value;
+    const note = document.getElementById('edit-note-' + id).value.trim();
+
+    try {
+      const res = await fetch(API_BASE + '/api/transactions/' + id, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ amount, date, note: note || null })
+      });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        showTxStatus(data.error || 'Could not update transaction.', 'error');
+        return;
+      }
+
+      showTxStatus('Transaction updated.', 'ok');
+      loadTransactions();
+      loadSummary();
+    } catch (err) {
+      showTxStatus('Could not reach the server.', 'error');
     }
   }
 
