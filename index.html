@@ -359,6 +359,7 @@
         isRegister ? 'Account created and signed in.' : 'Signed in successfully.',
         'ok'
       );
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
 
     } catch (err) {
       let msg = err.message;

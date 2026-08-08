@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Msumari Investments — Ledger</title>
+<style>
+  :root {
+    --ink: #26312B;
+    --ink-soft: #5B6B62;
+    --parchment: #F4F0E4;
+    --parchment-line: #E3DBC7;
+    --forest: #1B4332;
+    --forest-deep: #123023;
+    --gold: #B9873A;
+    --gold-soft: #E8D5AC;
+    --error: #A23B3B;
+    --income: #1B4332;
+    --expense: #A23B3B;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--parchment);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+  }
+
+  .topbar {
+    background: var(--forest);
+    background-image: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: #F4F0E4;
+    margin: 0;
+  }
+
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .topbar-user span {
+    font-size: 13px;
+    color: var(--gold-soft);
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  .logout-btn {
+    background: none;
+    border: 1px solid rgba(244,240,228,0.35);
+    color: #F4F0E4;
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .logout-btn:hover { background: rgba(244,240,228,0.1); }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .summary-card {
+    background: #FBF9F3;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+
+  .summary-label {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 8px;
+  }
+
+  .summary-value {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 21px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .summary-value.income { color: var(--income); }
+  .summary-value.expense { color: var(--expense); }
+
+  .panel {
+    background: #FBF9F3;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+
+  .panel h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 16px;
+    margin: 0 0 16px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .field label {
+    display: block;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    padding: 9px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+  }
+
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(27,67,50,0.12);
+  }
+
+  .type-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .type-btn {
+    flex: 1;
+    padding: 9px;
+    border: 1px solid var(--parchment-line);
+    background: #fff;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .type-btn.active[data-type="income"] { background: var(--income); border-color: var(--income); color: #F4F0E4; }
+  .type-btn.active[data-type="expense"] { background: var(--expense); border-color: var(--expense); color: #F4F0E4; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 11px;
+    background: var(--forest);
+    color: #F4F0E4;
+    border: none;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .submit-btn:hover { background: var(--forest-deep); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .quick-cat {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .quick-cat input {
+    flex: 1;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+  }
+
+  .quick-cat button {
+    padding: 8px 14px;
+    background: #fff;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--forest);
+    font-weight: 600;
+  }
+
+  .quick-cat button:hover { background: var(--parchment); }
+
+  .status {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    display: none;
+  }
+
+  .status.show { display: block; }
+  .status.error { background: #FBEAEA; color: var(--error); border: 1px solid #E8C6C6; }
+  .status.ok { background: #E9F1EC; color: var(--forest); border: 1px solid #C9DDCF; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  th {
+    text-align: left;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0 8px 10px;
+    border-bottom: 1px solid var(--parchment-line);
+  }
+
+  td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--parchment-line);
+  }
+
+  td.amount { text-align: right; font-family: "Courier New", Courier, monospace; font-weight: 600; }
+  td.amount.income { color: var(--income); }
+  td.amount.expense { color: var(--expense); }
+
+  .empty-state {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    padding: 30px 0;
+  }
+
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .del-btn:hover { color: var(--error); }
+
+  @media (max-width: 560px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <p class="topbar-title">Your ledger</p>
+  <div class="topbar-user">
+    <span id="user-name-display">…</span>
+    <button class="logout-btn" onclick="logout()">Sign out</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <p class="summary-label">Income</p>
+      <p class="summary-value income" id="summary-income">TZS 0</p>
+    </div>
+    <div class="summary-card">
+      <p class="summary-label">Expenses</p>
+      <p class="summary-value expense" id="summary-expenses">TZS 0</p>
+    </div>
+    <div class="summary-card">
+      <p class="summary-label">Net</p>
+      <p class="summary-value" id="summary-net">TZS 0</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Add a transaction</h2>
+    <form id="tx-form">
+      <div class="type-toggle">
+        <button type="button" class="type-btn active" data-type="expense" onclick="setTxType('expense')">Expense</button>
+        <button type="button" class="type-btn" data-type="income" onclick="setTxType('income')">Income</button>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="tx-date">Date</label>
+          <input type="date" id="tx-date" required>
+        </div>
+        <div class="field">
+          <label for="tx-amount">Amount (TZS)</label>
+          <input type="number" id="tx-amount" min="1" step="1" required placeholder="50000">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="tx-category">Category</label>
+          <select id="tx-category">
+            <option value="">Uncategorized</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="tx-note">Note (optional)</label>
+          <input type="text" id="tx-note" placeholder="e.g. Weekly groceries">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="tx-submit-btn">Add expense</button>
+    </form>
+
+    <div class="quick-cat">
+      <input type="text" id="new-cat-name" placeholder="New category name">
+      <button type="button" onclick="addCategory()">Add category</button>
+    </div>
+
+    <div class="status" id="tx-status"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Recent transactions</h2>
+    <div id="tx-list-wrap">
+      <p class="empty-state">Loading…</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const API_BASE = 'https://investment-backend-g967.onrender.com';
+  const token = sessionStorage.getItem('msumari_token');
+
+  if (!token) {
+    window.location.href = 'index.html';
+  }
+
+  let currentTxType = 'expense';
+  let categories = [];
+
+  function authHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    };
+  }
+
+  function logout() {
+    sessionStorage.removeItem('msumari_token');
+    window.location.href = 'index.html';
+  }
+
+  function formatTZS(amount) {
+    return 'TZS ' + Number(amount).toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+
+  function setTxType(type) {
+    currentTxType = type;
+    document.querySelectorAll('.type-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === type);
+    });
+    document.getElementById('tx-submit-btn').textContent = type === 'income' ? 'Add income' : 'Add expense';
+    loadCategories();
+  }
+
+  async function handleAuthFailure(res) {
+    if (res.status === 401 || res.status === 422) {
+      sessionStorage.removeItem('msumari_token');
+      window.location.href = 'index.html';
+      return true;
+    }
+    return false;
+  }
+
+  async function loadUser() {
+    try {
+      const res = await fetch(API_BASE + '/api/auth/me', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+      document.getElementById('user-name-display').textContent = data.name || data.email;
+    } catch (err) {
+      document.getElementById('user-name-display').textContent = '';
+    }
+  }
+
+  async function loadSummary() {
+    try {
+      const res = await fetch(API_BASE + '/api/transactions/summary', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+      document.getElementById('summary-income').textContent = formatTZS(data.total_income);
+      document.getElementById('summary-expenses').textContent = formatTZS(data.total_expenses);
+      document.getElementById('summary-net').textContent = formatTZS(data.net);
+    } catch (err) {
+      console.error('Failed to load summary', err);
+    }
+  }
+
+  async function loadCategories() {
+    try {
+      const res = await fetch(API_BASE + '/api/categories?type=' + currentTxType, { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      categories = await res.json();
+      const select = document.getElementById('tx-category');
+      select.innerHTML = '<option value="">Uncategorized</option>' +
+        categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    } catch (err) {
+      console.error('Failed to load categories', err);
+    }
+  }
+
+  async function addCategory() {
+    const input = document.getElementById('new-cat-name');
+    const name = input.value.trim();
+    if (!name) return;
+
+    try {
+      const res = await fetch(API_BASE + '/api/categories', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ name, type: currentTxType })
+      });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+      if (!res.ok) {
+        showTxStatus(data.error || 'Could not add category', 'error');
+        return;
+      }
+      input.value = '';
+      showTxStatus(`Category "${data.name}" added.`, 'ok');
+      loadCategories();
+    } catch (err) {
+      showTxStatus('Could not reach the server.', 'error');
+    }
+  }
+
+  function showTxStatus(message, type) {
+    const el = document.getElementById('tx-status');
+    el.textContent = message;
+    el.className = 'status show ' + type;
+    setTimeout(() => { el.className = 'status'; }, 4000);
+  }
+
+  async function loadTransactions() {
+    const wrap = document.getElementById('tx-list-wrap');
+    try {
+      const res = await fetch(API_BASE + '/api/transactions', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      const txs = await res.json();
+
+      if (txs.length === 0) {
+        wrap.innerHTML = '<p class="empty-state">No transactions yet. Add your first one above.</p>';
+        return;
+      }
+
+      const rows = txs.slice(0, 25).map(t => `
+        <tr>
+          <td>${t.date}</td>
+          <td>${t.category || 'Uncategorized'}</td>
+          <td>${t.note || ''}</td>
+          <td class="amount ${t.type}">${t.type === 'expense' ? '−' : '+'}${formatTZS(t.amount)}</td>
+          <td><button class="del-btn" onclick="deleteTransaction(${t.id})">Remove</button></td>
+        </tr>
+      `).join('');
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Category</th><th>Note</th><th style="text-align:right">Amount</th><th></th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    } catch (err) {
+      wrap.innerHTML = '<p class="empty-state">Could not load transactions.</p>';
+    }
+  }
+
+  async function deleteTransaction(id) {
+    try {
+      const res = await fetch(API_BASE + '/api/transactions/' + id, {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+      if (await handleAuthFailure(res)) return;
+      loadTransactions();
+      loadSummary();
+    } catch (err) {
+      showTxStatus('Could not remove transaction.', 'error');
+    }
+  }
+
+  document.getElementById('tx-form').addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+    const btn = document.getElementById('tx-submit-btn');
+    btn.disabled = true;
+
+    const payload = {
+      type: currentTxType,
+      date: document.getElementById('tx-date').value,
+      amount: document.getElementById('tx-amount').value,
+      note: document.getElementById('tx-note').value.trim() || null,
+      category_id: document.getElementById('tx-category').value || null
+    };
+
+    try {
+      const res = await fetch(API_BASE + '/api/transactions', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        showTxStatus(data.error || 'Could not add transaction.', 'error');
+        return;
+      }
+
+      showTxStatus('Transaction added.', 'ok');
+      document.getElementById('tx-amount').value = '';
+      document.getElementById('tx-note').value = '';
+      loadTransactions();
+      loadSummary();
+    } catch (err) {
+      showTxStatus('Could not reach the server. It may be starting up — try again shortly.', 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('tx-date').valueAsDate = new Date();
+
+  loadUser();
+  loadCategories();
+  loadTransactions();
+  loadSummary();
+</script>
+
+</body>
+</html>
