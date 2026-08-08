@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Msumari Investments — Sign In</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --ink: #26312B;
+    --ink-soft: #5B6B62;
+    --parchment: #F4F0E4;
+    --parchment-line: #E3DBC7;
+    --forest: #1B4332;
+    --forest-deep: #123023;
+    --gold: #B9873A;
+    --gold-soft: #E8D5AC;
+    --error: #A23B3B;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--parchment);
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 27px,
+        var(--parchment-line) 27px,
+        var(--parchment-line) 28px
+      );
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .book {
+    width: 100%;
+    max-width: 420px;
+    background: #FBF9F3;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px rgba(38,49,43,0.06), 0 12px 32px rgba(38,49,43,0.10);
+    overflow: hidden;
+  }
+
+  .book-header {
+    background: var(--forest);
+    background-image: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
+    padding: 34px 32px 28px;
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin: 0 0 10px;
+  }
+
+  .book-header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.15;
+    color: #F4F0E4;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .ledger-no {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(244,240,228,0.45);
+  }
+
+  .book-body { padding: 30px 32px 34px; }
+
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--parchment-line);
+    margin-bottom: 26px;
+  }
+
+  .tab {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 10px 4px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tab.active { color: var(--forest); border-bottom-color: var(--gold); }
+  .tab:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .field { margin-bottom: 18px; }
+
+  .field label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 7px;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 11px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(27,67,50,0.12);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    background: var(--forest);
+    color: #F4F0E4;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.05s ease;
+  }
+
+  .submit-btn:hover { background: var(--forest-deep); }
+  .submit-btn:active { transform: translateY(1px); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .submit-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .status {
+    margin-top: 16px;
+    padding: 11px 13px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .status.show { display: block; }
+  .status.error { background: #FBEAEA; color: var(--error); border: 1px solid #E8C6C6; }
+  .status.ok { background: #E9F1EC; color: var(--forest); border: 1px solid #C9DDCF; }
+
+  .stamp {
+    display: none;
+    text-align: center;
+    padding: 6px 0 4px;
+  }
+  .stamp.show { display: block; }
+
+  .stamp-mark {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    transform: rotate(-2deg);
+  }
+
+  .welcome-email {
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    color: var(--ink);
+    margin: 14px 0 4px;
+  }
+
+  .footnote {
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 20px;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<div class="book">
+  <div class="book-header">
+    <div class="ledger-no">TZS · No. 001</div>
+    <p class="eyebrow">Msumari Investments</p>
+    <h1>Your ledger,<br>kept safely.</h1>
+  </div>
+
+  <div class="book-body">
+    <div class="tabs">
+      <button class="tab active" id="tab-login" onclick="setMode('login')">Sign In</button>
+      <button class="tab" id="tab-register" onclick="setMode('register')">Create Account</button>
+    </div>
+
+    <form id="auth-form" onsubmit="handleSubmit(event)">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••" minlength="6">
+      </div>
+      <button type="submit" class="submit-btn" id="submit-btn">Sign In</button>
+    </form>
+
+    <div class="status" id="status"></div>
+
+    <div class="stamp" id="stamp">
+      <div class="welcome-email" id="welcome-email"></div>
+      <span class="stamp-mark">ACCOUNT VERIFIED</span>
+    </div>
+
+    <p class="footnote">Connected to investment-backend-g967.onrender.com</p>
+  </div>
+</div>
+
+<script>
+  const API_BASE = 'https://investment-backend-g967.onrender.com';
+  let mode = 'login';
+
+  function setMode(next) {
+    mode = next;
+    document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+    document.getElementById('tab-register').classList.toggle('active', mode === 'register');
+    document.getElementById('submit-btn').textContent = mode === 'login' ? 'Sign In' : 'Create Account';
+    document.getElementById('password').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+    hideStatus();
+    hideStamp();
+  }
+
+  function showStatus(message, type) {
+    const el = document.getElementById('status');
+    el.textContent = message;
+    el.className = 'status show ' + type;
+  }
+
+  function hideStatus() {
+    const el = document.getElementById('status');
+    el.className = 'status';
+  }
+
+  function hideStamp() {
+    document.getElementById('stamp').classList.remove('show');
+  }
+
+  async function handleSubmit(evt) {
+    evt.preventDefault();
+    hideStatus();
+    hideStamp();
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('submit-btn');
+    const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+
+    btn.disabled = true;
+    btn.textContent = mode === 'login' ? 'Signing in…' : 'Creating account…';
+
+    try {
+      const res = await fetch(API_BASE + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'Something went wrong. Check your details and try again.');
+      }
+
+      if (data.token) {
+        sessionStorage.setItem('msumari_token', data.token);
+      }
+
+      document.getElementById('welcome-email').textContent = (data.user && data.user.email) || email;
+      document.getElementById('stamp').classList.add('show');
+      showStatus(
+        mode === 'login' ? 'Signed in successfully.' : 'Account created and signed in.',
+        'ok'
+      );
+
+    } catch (err) {
+      let msg = err.message;
+      if (err.name === 'TypeError') {
+        msg = 'Could not reach the server. It may be starting up (Render free tier can take up to a minute) — try again shortly.';
+      }
+      showStatus(msg, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = mode === 'login' ? 'Sign In' : 'Create Account';
+    }
+  }
+</script>
+
+</body>
+</html>
