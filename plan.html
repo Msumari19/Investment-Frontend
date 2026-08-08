@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Msumari Investments — Plan</title>
+  <style>
+    /* Copy the full <style> block from dashboard.html */
+    :root {
+      --ink: #26312B;
+      --ink-soft: #5B6B62;
+      --parchment: #F4F0E4;
+      --parchment-line: #E3DBC7;
+      --forest: #1B4332;
+      --forest-deep: #123023;
+      --gold: #B9873A;
+      --gold-soft: #E8D5AC;
+      --error: #A23B3B;
+      --radius: 3px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--parchment);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+    }
+
+    .topbar {
+      background: var(--forest);
+      background-image: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 700;
+      font-size: 19px;
+      color: #F4F0E4;
+      margin: 0;
+    }
+
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar-user span {
+      font-size: 13px;
+      color: var(--gold-soft);
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    .logout-btn {
+      background: none;
+      border: 1px solid rgba(244,240,228,0.35);
+      color: #F4F0E4;
+      padding: 7px 14px;
+      border-radius: var(--radius);
+      font-size: 12.5px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .logout-btn:hover { background: rgba(244,240,228,0.1); }
+
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    th {
+      text-align: left;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      padding: 0 8px 10px;
+      border-bottom: 1px solid var(--parchment-line);
+    }
+
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--parchment-line);
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <p class="topbar-title">Your plan</p>
+    <div class="topbar-user">
+      <span id="user-name-display">…</span>
+      <button class="logout-btn" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div id="plan-output"></div>
+  </div>
+
+  <script>
+    const API_BASE = 'https://investment-backend-g967.onrender.com';
+    const token = sessionStorage.getItem('msumari_token');
+
+    if (!token) {
+      window.location.href = 'index.html';
+    }
+
+    async function handleAuthFailure(res) {
+      if (res.status === 401 || res.status === 422) {
+        sessionStorage.removeItem('msumari_token');
+        window.location.href = 'index.html';
+        return true;
+      }
+      return false;
+    }
+
+    function logout() {
+      sessionStorage.removeItem('msumari_token');
+      window.location.href = 'index.html';
+    }
+
+    async function loadUser() {
+      try {
+        const res = await fetch(API_BASE + '/api/auth/me', {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+        if (await handleAuthFailure(res)) return;
+        const data = await res.json();
+        document.getElementById('user-name-display').textContent = data.name || data.email;
+      } catch (err) {
+        document.getElementById('user-name-display').textContent = '';
+      }
+    }
+
+    async function loadPlan() {
+      const output = document.getElementById('plan-output');
+      
+      try {
+        const res = await fetch(API_BASE + '/api/transactions/summary', {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+        if (await handleAuthFailure(res)) return;
+        const summary = await res.json();
+
+        const planRes = await fetch(API_BASE + '/api/plans/generate', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            monthly_income: summary.total_income,
+            monthly_expenses: summary.total_expenses,
+            emergency_fund_balance: 0,
+            risk_preference: 'moderate',
+          })
+        });
+        if (await handleAuthFailure(planRes)) return;
+        const plan = await planRes.json();
+
+        output.innerHTML = `
+          <h2>Your Investment Plan</h2>
+          <p>Risk Profile: ${plan.risk_profile}</p>
+          <p>Savings Tier: ${plan.savings_tier}</p>
+          <p>Net Monthly Savings: TZS ${plan.net_monthly_savings_tzs.toLocaleString()}</p>
+          <p>Recommended Monthly Savings: TZS ${plan.recommended_monthly_savings_tzs.toLocaleString()}</p>
+          
+          <h3>Emergency Fund</h3>
+          <p>Status: ${plan.emergency_fund.status}</p>
+          <p>Target Months: ${plan.emergency_fund.target_months}</p>
+          <p>Target Amount: TZS ${plan.emergency_fund.target_tzs.toLocaleString()}</p>
+          <p>Current Balance: TZS ${plan.emergency_fund.current_balance_tzs.toLocaleString()}</p>
+          <p>Deficit: TZS ${plan.emergency_fund.deficit_tzs.toLocaleString()}</p>
+          
+          <h3>Allocations</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Instrument</th>
+                <th>Category</th>
+                <th>Percentage</th>
+                <th>Monthly Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${plan.allocations.map(a => `
+                <tr>
+                  <td>${a.instrument}</td>
+                  <td>${a.category}</td>
+                  <td>${a.portfolio_percentage}%</td>
+                  <td>TZS ${a.monthly_amount_tzs.toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+      } catch (err) {
+        console.error('Failed to load plan', err);
+        output.textContent = 'Failed to load plan. Try again later.';
+      }
+    }
+
+    loadUser();
+    loadPlan();
+  </script>
+</body>
+</html>
