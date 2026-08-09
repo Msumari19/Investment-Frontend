@@ -1,228 +1,447 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Msumari Investments — Plan</title>
-  <style>
-    /* Copy the full <style> block from dashboard.html */
-    :root {
-      --ink: #26312B;
-      --ink-soft: #5B6B62;
-      --parchment: #F4F0E4;
-      --parchment-line: #E3DBC7;
-      --forest: #1B4332;
-      --forest-deep: #123023;
-      --gold: #B9873A;
-      --gold-soft: #E8D5AC;
-      --error: #A23B3B;
-      --radius: 3px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Msumari Investments — Plan</title>
+<style>
+  :root {
+    --ink: #26312B;
+    --ink-soft: #5B6B62;
+    --parchment: #F4F0E4;
+    --parchment-line: #E3DBC7;
+    --forest: #1B4332;
+    --forest-deep: #123023;
+    --gold: #B9873A;
+    --gold-soft: #E8D5AC;
+    --error: #A23B3B;
+    --income: #1B4332;
+    --expense: #A23B3B;
+    --radius: 3px;
+  }
 
-    * { box-sizing: border-box; }
+  * { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--parchment);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--ink);
-    }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--parchment);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+  }
 
-    .topbar {
-      background: var(--forest);
-      background-image: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
-      padding: 18px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+  .topbar {
+    background: var(--forest);
+    background-image: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-    .topbar-title {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-weight: 700;
-      font-size: 19px;
-      color: #F4F0E4;
-      margin: 0;
-    }
+  .topbar-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: #F4F0E4;
+    margin: 0;
+  }
 
-    .topbar-user {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
 
-    .topbar-user span {
-      font-size: 13px;
-      color: var(--gold-soft);
-      font-family: "Courier New", Courier, monospace;
-    }
+  .topbar-user span {
+    font-size: 13px;
+    color: var(--gold-soft);
+    font-family: "Courier New", Courier, monospace;
+  }
 
-    .logout-btn {
-      background: none;
-      border: 1px solid rgba(244,240,228,0.35);
-      color: #F4F0E4;
-      padding: 7px 14px;
-      border-radius: var(--radius);
-      font-size: 12.5px;
-      cursor: pointer;
-      font-family: inherit;
-    }
+  .topbar-link {
+    color: var(--gold-soft);
+    text-decoration: none;
+    font-size: 13px;
+    font-family: "Courier New", Courier, monospace;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+  }
 
-    .logout-btn:hover { background: rgba(244,240,228,0.1); }
+  .topbar-link:hover { border-bottom-color: var(--gold-soft); }
 
-    .wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 28px 20px 60px;
-    }
+  .logout-btn {
+    background: none;
+    border: 1px solid rgba(244,240,228,0.35);
+    color: #F4F0E4;
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    cursor: pointer;
+    font-family: inherit;
+  }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13.5px;
-    }
+  .logout-btn:hover { background: rgba(244,240,228,0.1); }
 
-    th {
-      text-align: left;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      padding: 0 8px 10px;
-      border-bottom: 1px solid var(--parchment-line);
-    }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
 
-    td {
-      padding: 10px 8px;
-      border-bottom: 1px solid var(--parchment-line);
-    }
-  </style>
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .summary-card {
+    background: #FBF9F3;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+
+  .summary-label {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 8px;
+  }
+
+  .summary-value {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .panel {
+    background: #FBF9F3;
+    border: 1px solid var(--parchment-line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+
+  .panel h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 16px;
+    margin: 0 0 14px;
+  }
+
+  .panel p {
+    font-size: 13.5px;
+    margin: 0 0 8px;
+    color: var(--ink-soft);
+  }
+
+  .panel p strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .message-box {
+    background: var(--gold-soft);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--forest-deep);
+    margin-bottom: 14px;
+  }
+
+  .message-box.alert {
+    background: #FBEAEA;
+    border-color: var(--error);
+    color: var(--error);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    text-align: left;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0 8px 10px;
+    border-bottom: 1px solid var(--parchment-line);
+  }
+
+  td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--parchment-line);
+    vertical-align: top;
+  }
+
+  td.amount {
+    text-align: right;
+    font-family: "Courier New", Courier, monospace;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .exec-tag {
+    display: inline-block;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: var(--radius);
+    background: var(--parchment);
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    padding: 20px 0;
+  }
+
+  .disclaimer {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--parchment-line);
+  }
+
+  @media (max-width: 560px) {
+    .summary-grid { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
-  <div class="topbar">
-    <p class="topbar-title">Your plan</p>
-    <div class="topbar-user">
-      <span id="user-name-display">…</span>
-      <button class="logout-btn" onclick="logout()">Sign out</button>
-    </div>
+
+<div class="topbar">
+  <p class="topbar-title">Your plan</p>
+  <div class="topbar-user">
+    <a href="dashboard.html" class="topbar-link">Dashboard</a>
+    <span id="user-name-display">…</span>
+    <button class="logout-btn" onclick="logout()">Sign out</button>
   </div>
+</div>
 
-  <div class="wrap">
-    <div id="plan-output"></div>
+<div class="wrap">
+  <div id="plan-output">
+    <p class="empty-state">Loading your plan…</p>
   </div>
+</div>
 
-  <script>
-    const API_BASE = 'https://investment-backend-g967.onrender.com';
-    const token = sessionStorage.getItem('msumari_token');
+<script>
+  const API_BASE = 'https://investment-backend-g967.onrender.com';
+  const token = sessionStorage.getItem('msumari_token');
 
-    if (!token) {
-      window.location.href = 'index.html';
-    }
+  if (!token) {
+    window.location.href = 'index.html';
+  }
 
-    async function handleAuthFailure(res) {
-      if (res.status === 401 || res.status === 422) {
-        sessionStorage.removeItem('msumari_token');
-        window.location.href = 'index.html';
-        return true;
-      }
-      return false;
-    }
+  function authHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    };
+  }
 
-    function logout() {
+  async function handleAuthFailure(res) {
+    if (res.status === 401 || res.status === 422) {
       sessionStorage.removeItem('msumari_token');
       window.location.href = 'index.html';
+      return true;
     }
+    return false;
+  }
 
-    async function loadUser() {
-      try {
-        const res = await fetch(API_BASE + '/api/auth/me', {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        });
-        if (await handleAuthFailure(res)) return;
-        const data = await res.json();
-        document.getElementById('user-name-display').textContent = data.name || data.email;
-      } catch (err) {
-        document.getElementById('user-name-display').textContent = '';
+  function logout() {
+    sessionStorage.removeItem('msumari_token');
+    window.location.href = 'index.html';
+  }
+
+  function formatTZS(amount) {
+    return 'TZS ' + Number(amount || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+
+  async function loadUser() {
+    try {
+      const res = await fetch(API_BASE + '/api/auth/me', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+      document.getElementById('user-name-display').textContent = data.name || data.email;
+    } catch (err) {
+      document.getElementById('user-name-display').textContent = '';
+    }
+  }
+
+  async function loadPlan() {
+    const output = document.getElementById('plan-output');
+
+    try {
+      const res = await fetch(API_BASE + '/api/transactions/summary', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      const summary = await res.json();
+
+      const planRes = await fetch(API_BASE + '/api/plans/generate', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({
+          monthly_income: summary.total_income,
+          monthly_expenses: summary.total_expenses
+        })
+      });
+
+      if (await handleAuthFailure(planRes)) return;
+      const snapshot = await planRes.json();
+
+      if (!planRes.ok) {
+        output.innerHTML = `<div class="message-box alert">${snapshot.error || 'Could not generate a plan.'}</div>`;
+        return;
       }
+
+      // The actual plan fields are nested under .result, not top-level.
+      const plan = snapshot.result;
+      renderPlan(plan);
+
+    } catch (err) {
+      console.error('Failed to load plan', err);
+      output.innerHTML = '<p class="empty-state">Could not reach the server. It may be starting up — try again shortly.</p>';
+    }
+  }
+
+  function renderPlan(plan) {
+    const output = document.getElementById('plan-output');
+    let html = '';
+
+    // Top-level messages (e.g. surplus notes, gate explanations)
+    (plan.messages || []).forEach(msg => {
+      html += `<div class="message-box">${msg}</div>`;
+    });
+
+    html += `
+      <div class="summary-grid">
+        <div class="summary-card">
+          <p class="summary-label">Risk Profile</p>
+          <p class="summary-value">${plan.risk_profile || '—'}</p>
+        </div>
+        <div class="summary-card">
+          <p class="summary-label">Savings Tier</p>
+          <p class="summary-value">${plan.savings_tier || '—'}</p>
+        </div>
+        <div class="summary-card">
+          <p class="summary-label">Net Monthly Savings</p>
+          <p class="summary-value">${formatTZS(plan.net_monthly_savings_tzs)}</p>
+        </div>
+      </div>
+    `;
+
+    // Cash-flow deficit: nothing else to show
+    if (plan.status === 'cash_flow_deficit') {
+      html += `<div class="panel"><p class="empty-state">Log some income to see an allocation plan — expenses currently exceed income.</p></div>`;
+      output.innerHTML = html;
+      return;
     }
 
-    async function loadPlan() {
-      const output = document.getElementById('plan-output');
-      
-      try {
-        const res = await fetch(API_BASE + '/api/transactions/summary', {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        });
-        if (await handleAuthFailure(res)) return;
-        const summary = await res.json();
+    // Emergency fund block — always present
+    const ef = plan.emergency_fund || {};
+    html += `
+      <div class="panel">
+        <h2>Emergency Fund</h2>
+        <p><strong>Status:</strong> ${ef.status}</p>
+        <p><strong>Target:</strong> ${ef.target_months} months of expenses (${formatTZS(ef.target_tzs)})</p>
+        <p><strong>Current balance:</strong> ${formatTZS(ef.current_balance_tzs)}</p>
+        ${ef.deficit_tzs > 0 ? `<p><strong>Still needed:</strong> ${formatTZS(ef.deficit_tzs)}</p>` : ''}
+        ${ef.surplus_tzs > 0 ? `<p><strong>Surplus above target:</strong> ${formatTZS(ef.surplus_tzs)}</p>` : ''}
+        ${plan.emergency_contribution && plan.emergency_contribution.monthly_amount_tzs > 0
+          ? `<p><strong>This month's contribution:</strong> ${formatTZS(plan.emergency_contribution.monthly_amount_tzs)} → ${plan.emergency_contribution.instrument || ''}</p>`
+          : ''}
+      </div>
+    `;
 
-        const planRes = await fetch(API_BASE + '/api/plans/generate', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            monthly_income: summary.total_income,
-            monthly_expenses: summary.total_expenses,
-            emergency_fund_balance: 0,
-            risk_preference: 'moderate',
-          })
-        });
-        if (await handleAuthFailure(planRes)) return;
-        const plan = await planRes.json();
-
-        output.innerHTML = `
-          <h2>Your Investment Plan</h2>
-          <p>Risk Profile: ${plan.risk_profile}</p>
-          <p>Savings Tier: ${plan.savings_tier}</p>
-          <p>Net Monthly Savings: TZS ${plan.net_monthly_savings_tzs.toLocaleString()}</p>
-          <p>Recommended Monthly Savings: TZS ${plan.recommended_monthly_savings_tzs.toLocaleString()}</p>
-          
-          <h3>Emergency Fund</h3>
-          <p>Status: ${plan.emergency_fund.status}</p>
-          <p>Target Months: ${plan.emergency_fund.target_months}</p>
-          <p>Target Amount: TZS ${plan.emergency_fund.target_tzs.toLocaleString()}</p>
-          <p>Current Balance: TZS ${plan.emergency_fund.current_balance_tzs.toLocaleString()}</p>
-          <p>Deficit: TZS ${plan.emergency_fund.deficit_tzs.toLocaleString()}</p>
-          
-          <h3>Allocations</h3>
+    // Debt repayment priority: blocks growth allocations
+    if (plan.status === 'debt_repayment_priority') {
+      const debts = (plan.debt_repayment && plan.debt_repayment.blocking_debts) || [];
+      html += `
+        <div class="panel">
+          <h2>High-Interest Debt — Priority</h2>
+          <p>Clear this debt before any growth allocation. Only the emergency buffer above is funded this month.</p>
           <table>
-            <thead>
-              <tr>
-                <th>Instrument</th>
-                <th>Category</th>
-                <th>Percentage</th>
-                <th>Monthly Amount</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Debt</th><th style="text-align:right">Balance</th><th style="text-align:right">Rate</th></tr></thead>
             <tbody>
-              ${plan.allocations.map(a => `
+              ${debts.map(d => `
                 <tr>
-                  <td>${a.instrument}</td>
-                  <td>${a.category}</td>
-                  <td>${a.portfolio_percentage}%</td>
-                  <td>TZS ${a.monthly_amount_tzs.toLocaleString()}</td>
+                  <td>${d.name}</td>
+                  <td class="amount">${formatTZS(d.balance_tzs)}</td>
+                  <td class="amount">${d.annual_interest_rate_pct}%</td>
                 </tr>
               `).join('')}
             </tbody>
           </table>
-        `;
-
-      } catch (err) {
-        console.error('Failed to load plan', err);
-        output.textContent = 'Failed to load plan. Try again later.';
-      }
+        </div>
+      `;
+      output.innerHTML = html;
+      return;
     }
 
-    loadUser();
-    loadPlan();
-  </script>
+    // Normal path: allocations table
+    const allocations = plan.allocations || [];
+    html += `
+      <div class="panel">
+        <h2>Recommended Allocations</h2>
+        <p><strong>Investable this month:</strong> ${formatTZS(plan.investable_amount_tzs)}</p>
+        ${allocations.length === 0
+          ? '<p class="empty-state">No allocations to show yet.</p>'
+          : `
+          <table>
+            <thead>
+              <tr>
+                <th>Instrument</th>
+                <th style="text-align:right">%</th>
+                <th style="text-align:right">Monthly</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${allocations.map(a => `
+                <tr>
+                  <td>
+                    ${a.instrument}
+                    ${a.execution && a.execution !== 'eligible_for_allocation'
+                      ? `<br><span class="exec-tag">${a.execution.replace(/_/g, ' ')}</span>`
+                      : ''}
+                  </td>
+                  <td class="amount">${a.portfolio_percentage}%</td>
+                  <td class="amount">${formatTZS(a.monthly_amount_tzs)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `}
+      </div>
+
+      <p class="disclaimer">
+        This is planning output based on your own ledger data, not personalised investment advice.
+        Product minimums, tax treatment and availability can change — verify current terms with the
+        provider before acting.
+      </p>
+    `;
+
+    output.innerHTML = html;
+  }
+
+  loadUser();
+  loadPlan();
+</script>
+
 </body>
 </html>
