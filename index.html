@@ -4,18 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Msumari Investments — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #26312B;
-    --ink-soft: #5B6B62;
-    --parchment: #F4F0E4;
-    --parchment-line: #E3DBC7;
-    --forest: #1B4332;
-    --forest-deep: #123023;
-    --gold: #B9873A;
-    --gold-soft: #E8D5AC;
-    --error: #A23B3B;
-    --radius: 3px;
+    --ink: #1B2A4A;
+    --ink-soft: #5A6B85;
+    --paper: #F5F6F2;
+    --paper-panel: #FFFFFF;
+    --grid-line: #C9D2DE;
+    --copper: #B87333;
+    --copper-deep: #96592A;
+    --income: #2F6F62;
+    --expense: #A6432C;
+    --income-bg: #E8F1EE;
+    --expense-bg: #F7EAE6;
+    --radius: 4px;
+
+    --font-display: "Space Grotesk", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-body: "IBM Plex Sans", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", "Courier New", Courier, monospace;
   }
 
   * { box-sizing: border-box; }
@@ -23,16 +32,8 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background: var(--parchment);
-    background-image:
-      repeating-linear-gradient(
-        to bottom,
-        transparent,
-        transparent 27px,
-        var(--parchment-line) 27px,
-        var(--parchment-line) 28px
-      );
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    font-family: var(--font-body);
     color: var(--ink);
     display: flex;
     align-items: center;
@@ -40,204 +41,239 @@
     padding: 24px;
   }
 
-  .book {
+  .card {
     width: 100%;
     max-width: 440px;
-    background: #FBF9F3;
-    border: 1px solid var(--parchment-line);
+    background: var(--paper-panel);
+    border: 1px solid var(--grid-line);
     border-radius: var(--radius);
-    box-shadow: 0 1px 2px rgba(38,49,43,0.06), 0 12px 32px rgba(38,49,43,0.10);
     overflow: hidden;
   }
 
-  .book-header {
-    background: var(--forest);
-    background-image: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
-    padding: 34px 32px 28px;
+  /* ---------- Header ---------- */
+
+  .card-header {
+    background: var(--ink);
+    background-image: linear-gradient(180deg, #1B2A4A 0%, #14203A 100%);
+    padding: 30px 32px 26px;
     position: relative;
   }
 
-  .eyebrow {
-    font-family: "Courier New", Courier, monospace;
-    font-size: 11px;
-    letter-spacing: 0.14em;
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+  .brand-mark { width: 34px; height: 34px; flex-shrink: 0; }
+  .brand-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    color: #F5F6F2;
+    line-height: 1.2;
+  }
+  .brand-text span {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--gold-soft);
-    margin: 0 0 10px;
+    color: var(--copper);
+    margin-top: 2px;
   }
 
-  .book-header h1 {
-    font-family: Georgia, 'Times New Roman', serif;
+  .card-header h1 {
+    font-family: var(--font-display);
     font-weight: 700;
-    font-size: 28px;
-    line-height: 1.15;
-    color: #F4F0E4;
-    margin: 0;
+    font-size: 24px;
+    line-height: 1.2;
     letter-spacing: -0.01em;
+    color: #F5F6F2;
+    margin: 0;
   }
 
   .ledger-no {
     position: absolute;
-    top: 32px;
+    top: 30px;
     right: 32px;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 11px;
-    color: rgba(244,240,228,0.45);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: rgba(245, 246, 242, 0.42);
   }
 
-  .book-body { padding: 30px 32px 34px; }
+  /* ---------- Body ---------- */
 
-  .tabs {
-    display: flex;
-    border-bottom: 1px solid var(--parchment-line);
-    margin-bottom: 26px;
-  }
+  .card-body { padding: 26px 32px 30px; }
+
+  .tabs { display: flex; border-bottom: 1px solid var(--grid-line); margin-bottom: 4px; }
 
   .tab {
     flex: 1;
     background: none;
     border: none;
     padding: 10px 4px 12px;
+    font-family: var(--font-body);
     font-size: 13.5px;
     font-weight: 600;
     color: var(--ink-soft);
     cursor: pointer;
-    letter-spacing: 0.01em;
     border-bottom: 2px solid transparent;
     margin-bottom: -1px;
     transition: color 0.15s ease, border-color 0.15s ease;
   }
+  .tab.active { color: var(--ink); border-bottom-color: var(--copper); }
+  .tab:hover { color: var(--ink); }
+  .tab:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
 
-  .tab.active { color: var(--forest); border-bottom-color: var(--gold); }
-  .tab:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .tick-divider {
+    height: 8px;
+    margin: 0 0 24px;
+    background-image: repeating-linear-gradient(to right, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 12px);
+    background-position: bottom;
+    background-size: 100% 8px;
+    background-repeat: repeat-x;
+  }
 
-  .field { margin-bottom: 16px; }
+  .field { margin-bottom: 15px; }
   .field.hidden { display: none; }
 
   .field label {
     display: block;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.09em;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    margin-bottom: 7px;
+    margin-bottom: 6px;
+    font-weight: 500;
   }
 
   .field input {
     width: 100%;
-    padding: 11px 12px;
-    font-family: inherit;
-    font-size: 14.5px;
+    padding: 10px 11px;
+    font-family: var(--font-body);
+    font-size: 14px;
     color: var(--ink);
-    background: #fff;
-    border: 1px solid var(--parchment-line);
+    background: var(--paper);
+    border: 1px solid var(--grid-line);
     border-radius: var(--radius);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-
   .field input:focus {
     outline: none;
-    border-color: var(--forest);
-    box-shadow: 0 0 0 3px rgba(27,67,50,0.12);
+    border-color: var(--copper);
+    box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.14);
   }
 
-  .field .hint {
-    font-size: 11.5px;
-    color: var(--ink-soft);
-    margin-top: 5px;
-  }
+  .field .hint { font-size: 11.5px; color: var(--ink-soft); margin: 5px 0 0; }
 
   .submit-btn {
     width: 100%;
     padding: 12px;
     margin-top: 6px;
-    background: var(--forest);
-    color: #F4F0E4;
+    background: var(--copper);
+    color: #fff;
     border: none;
     border-radius: var(--radius);
-    font-family: inherit;
+    font-family: var(--font-body);
     font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.01em;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.05s ease;
+    transition: background 0.15s ease;
   }
-
-  .submit-btn:hover { background: var(--forest-deep); }
-  .submit-btn:active { transform: translateY(1px); }
+  .submit-btn:hover { background: var(--copper-deep); }
   .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-  .submit-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .submit-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
   .status {
-    margin-top: 16px;
+    margin-top: 15px;
     padding: 11px 13px;
     border-radius: var(--radius);
     font-size: 13px;
     line-height: 1.5;
     display: none;
   }
-
   .status.show { display: block; }
-  .status.error { background: #FBEAEA; color: var(--error); border: 1px solid #E8C6C6; }
-  .status.ok { background: #E9F1EC; color: var(--forest); border: 1px solid #C9DDCF; }
+  .status.error { background: var(--expense-bg); color: var(--expense); border: 1px solid #E3C4B8; }
+  .status.ok { background: var(--income-bg); color: var(--income); border: 1px solid #C3DCD5; }
 
-  .stamp {
-    display: none;
-    text-align: center;
-    padding: 6px 0 4px;
-  }
+  .stamp { display: none; text-align: center; padding: 16px 0 2px; }
   .stamp.show { display: block; }
+
+  .stamp-email {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+    margin: 0 0 10px;
+    word-break: break-all;
+  }
 
   .stamp-mark {
     display: inline-block;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 11px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
     letter-spacing: 0.1em;
-    color: var(--gold);
-    border: 1px solid var(--gold);
+    text-transform: uppercase;
+    color: var(--copper);
+    border: 1px solid var(--copper);
     padding: 6px 14px;
     border-radius: var(--radius);
-    transform: rotate(-2deg);
-  }
-
-  .welcome-email {
-    text-align: center;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 17px;
-    color: var(--ink);
-    margin: 14px 0 4px;
   }
 
   .footnote {
     text-align: center;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 10.5px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--ink-soft);
-    margin-top: 20px;
-    letter-spacing: 0.02em;
+    margin: 22px 0 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 0; align-items: stretch; }
+    .card { max-width: none; border: none; border-radius: 0; min-height: 100vh; }
+    .card-header { padding: 26px 22px 22px; }
+    .ledger-no { top: 26px; right: 22px; }
+    .card-body { padding: 24px 22px 30px; }
   }
 </style>
 </head>
 <body>
 
-<div class="book">
-  <div class="book-header">
+<div class="card">
+  <div class="card-header">
     <div class="ledger-no">TZS · No. 001</div>
-    <p class="eyebrow">Msumari Investments</p>
+
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="14" y="4" width="12" height="4" rx="1" fill="#B87333"/>
+        <rect x="18.4" y="8" width="3.2" height="19" fill="#B87333"/>
+        <path d="M18.4 27 L20 35 L21.6 27 Z" fill="#B87333"/>
+        <line x1="26" y1="11" x2="29" y2="11" stroke="#8FA0BE" stroke-width="1"/>
+        <line x1="26" y1="15" x2="28" y2="15" stroke="#8FA0BE" stroke-width="1"/>
+        <line x1="26" y1="19" x2="29" y2="19" stroke="#8FA0BE" stroke-width="1"/>
+        <line x1="26" y1="23" x2="28" y2="23" stroke="#8FA0BE" stroke-width="1"/>
+      </svg>
+      <div class="brand-text">Msumari<span>Nailed down</span></div>
+    </div>
+
     <h1>Your ledger,<br>kept safely.</h1>
   </div>
 
-  <div class="book-body">
+  <div class="card-body">
     <div class="tabs">
-      <button class="tab active" id="tab-login" onclick="setMode('login')">Sign In</button>
-      <button class="tab" id="tab-register" onclick="setMode('register')">Create Account</button>
+      <button class="tab active" id="tab-login" type="button" onclick="setMode('login')">Sign in</button>
+      <button class="tab" id="tab-register" type="button" onclick="setMode('register')">Create account</button>
     </div>
+    <div class="tick-divider"></div>
 
     <form id="auth-form" onsubmit="handleSubmit(event)">
 
       <div class="field" id="field-name">
-        <label for="name">Full Name</label>
+        <label for="name">Full name</label>
         <input type="text" id="name" autocomplete="name" placeholder="Juma Msumari">
       </div>
 
@@ -247,7 +283,7 @@
       </div>
 
       <div class="field" id="field-phone">
-        <label for="phone">Phone Number</label>
+        <label for="phone">Phone number</label>
         <input type="tel" id="phone" autocomplete="tel" placeholder="0712 345 678">
         <p class="hint">Tanzanian mobile number — starting with 0 or +255</p>
       </div>
@@ -259,20 +295,20 @@
 
       <div class="field">
         <label for="password">Password</label>
-        <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••" minlength="8">
+        <input type="password" id="password" required autocomplete="current-password" placeholder="At least 8 characters" minlength="8">
       </div>
 
-      <button type="submit" class="submit-btn" id="submit-btn">Sign In</button>
+      <button type="submit" class="submit-btn" id="submit-btn">Sign in</button>
     </form>
 
-    <div class="status" id="status"></div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
 
     <div class="stamp" id="stamp">
-      <div class="welcome-email" id="welcome-email"></div>
-      <span class="stamp-mark">ACCOUNT VERIFIED</span>
+      <p class="stamp-email" id="stamp-email"></p>
+      <span class="stamp-mark">Account verified</span>
     </div>
 
-    <p class="footnote">Connected to investment-backend-g967.onrender.com</p>
+    <p class="footnote">Msumari Investments · Tanzania</p>
   </div>
 </div>
 
@@ -286,7 +322,7 @@
 
     document.getElementById('tab-login').classList.toggle('active', !isRegister);
     document.getElementById('tab-register').classList.toggle('active', isRegister);
-    document.getElementById('submit-btn').textContent = isRegister ? 'Create Account' : 'Sign In';
+    document.getElementById('submit-btn').textContent = isRegister ? 'Create account' : 'Sign in';
     document.getElementById('password').autocomplete = isRegister ? 'new-password' : 'current-password';
 
     document.getElementById('field-name').classList.toggle('hidden', !isRegister);
@@ -346,19 +382,16 @@
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || data.message || 'Something went wrong. Check your details and try again.');
+        throw new Error(data.error || data.message || 'Check your details and try again.');
       }
 
       if (data.token) {
         sessionStorage.setItem('msumari_token', data.token);
       }
 
-      document.getElementById('welcome-email').textContent = (data.user && data.user.email) || email;
+      document.getElementById('stamp-email').textContent = (data.user && data.user.email) || email;
       document.getElementById('stamp').classList.add('show');
-      showStatus(
-        isRegister ? 'Account created and signed in.' : 'Signed in successfully.',
-        'ok'
-      );
+      showStatus(isRegister ? 'Account created. Taking you to your dashboard.' : 'Signed in. Taking you to your dashboard.', 'ok');
       setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
 
     } catch (err) {
@@ -369,11 +402,10 @@
       showStatus(msg, 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = isRegister ? 'Create Account' : 'Sign In';
+      btn.textContent = isRegister ? 'Create account' : 'Sign in';
     }
   }
 
-  // Set initial field visibility for login mode
   setMode('login');
 </script>
 
