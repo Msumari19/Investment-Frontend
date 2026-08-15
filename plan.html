@@ -174,6 +174,19 @@
   .gate ul { margin: 10px 0 0; padding-left: 18px; }
   .gate li { font-size: 13px; color: var(--ink-soft); margin-bottom: 4px; }
 
+  .stale {
+    background: var(--paper-panel); border: 1px solid var(--copper);
+    border-radius: var(--radius); padding: 12px 16px; margin-bottom: 18px;
+    font-size: 13px; color: var(--ink); display: flex; align-items: center;
+    justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  }
+  .stale button {
+    background: var(--copper); color: #fff; border: none; padding: 8px 14px;
+    border-radius: var(--radius); font-family: var(--font-body); font-size: 12.5px;
+    font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+  .stale button:hover { background: var(--copper-deep); }
+
   .message-box { background: var(--income-bg); border: 1px solid #C3DCD5; border-radius: var(--radius); padding: 12px 14px; font-size: 13px; color: var(--income); margin-bottom: 14px; }
   .message-box.alert { background: var(--expense-bg); border-color: #E3C4B8; color: var(--expense); }
 
@@ -689,7 +702,7 @@
         return;
       }
 
-      renderPlan(snapshots[0]);
+      renderPlan(snapshots[0], true);
     } catch (err) {
       output.innerHTML = '<div class="panel"><p class="empty-state">Could not reach the server. It may be starting up — try again shortly.</p></div>';
     }
@@ -729,7 +742,7 @@
     return '';
   }
 
-  function renderPlan(snapshot) {
+  function renderPlan(snapshot, fromHistory) {
     const output = document.getElementById('plan-output');
     const plan = snapshot.result || {};
     const sources = (snapshot.input && snapshot.input._sources) || {};
@@ -758,6 +771,15 @@
       `;
     }
 
+    if (fromHistory) {
+      html = `
+        <div class="stale">
+          <span>This is your last saved plan. It does not update on its own — regenerate it after changing transactions or settings.</span>
+          <button onclick="generatePlan()">Regenerate</button>
+        </div>
+      ` + html;
+    }
+
     (plan.messages || []).forEach(msg => {
       html += `<div class="message-box">${escapeHtml(msg)}</div>`;
     });
@@ -778,6 +800,11 @@
         </div>
       </div>
     `;
+
+    if (plan.status === 'no_ledger_data') {
+      output.innerHTML = html;
+      return;
+    }
 
     if (plan.status === 'cash_flow_deficit') {
       html += `<div class="panel"><p class="empty-state">Log this month's income on the dashboard, then generate again.</p></div>`;
