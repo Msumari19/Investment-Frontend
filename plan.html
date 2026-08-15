@@ -152,6 +152,28 @@
   .exec-tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; border-radius: var(--radius); background: var(--paper); color: var(--ink-soft); margin-top: 3px; }
   .source-tag { display: inline-block; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: var(--radius); background: rgba(184,115,51,0.12); color: var(--copper-deep); margin-left: 8px; vertical-align: middle; }
 
+  .gate {
+    background: var(--paper-panel); border: 1px solid var(--grid-line);
+    border-left: 3px solid var(--copper); border-radius: var(--radius);
+    padding: 22px 26px; margin-bottom: 22px;
+  }
+  .gate.level-0, .gate.level-1 { border-left-color: var(--expense); }
+  .gate.level-2 { border-left-color: var(--copper); }
+  .gate.level-3, .gate.level-4 { border-left-color: var(--income); }
+  .gate h2 { font-family: var(--font-display); font-weight: 600; font-size: 17px; margin: 0 0 8px; }
+  .gate p { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); margin: 0 0 10px; }
+  .gate .next {
+    display: inline-block; font-family: var(--font-mono); font-size: 11.5px;
+    background: var(--paper); border: 1px solid var(--grid-line);
+    border-radius: var(--radius); padding: 7px 11px; color: var(--ink); margin-top: 2px;
+  }
+  .gate .timeline {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px;
+  }
+  .gate ul { margin: 10px 0 0; padding-left: 18px; }
+  .gate li { font-size: 13px; color: var(--ink-soft); margin-bottom: 4px; }
+
   .message-box { background: var(--income-bg); border: 1px solid #C3DCD5; border-radius: var(--radius); padding: 12px 14px; font-size: 13px; color: var(--income); margin-bottom: 14px; }
   .message-box.alert { background: var(--expense-bg); border-color: #E3C4B8; color: var(--expense); }
 
@@ -720,6 +742,22 @@
         ' at ' + when.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     }
 
+    const gate = plan.gate;
+    if (gate) {
+      const months = gate.months_until_investing;
+      html += `
+        <div class="gate level-${escapeHtml(gate.level)}">
+          ${months ? `<p class="timeline">Investing begins in about ${escapeHtml(months)} month${months === 1 ? '' : 's'}</p>` : ''}
+          <h2>${escapeHtml(gate.headline)}</h2>
+          <p>${escapeHtml(gate.detail)}</p>
+          ${gate.next_step ? `<span class="next">${escapeHtml(gate.next_step)}</span>` : ''}
+          ${(gate.reachable_products || []).length && gate.level === 3
+            ? `<ul>${gate.reachable_products.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`
+            : ''}
+        </div>
+      `;
+    }
+
     (plan.messages || []).forEach(msg => {
       html += `<div class="message-box">${escapeHtml(msg)}</div>`;
     });
@@ -742,7 +780,7 @@
     `;
 
     if (plan.status === 'cash_flow_deficit') {
-      html += `<div class="panel"><p class="empty-state">Expenses currently match or exceed income, so there is nothing to allocate. Log this month's income on the dashboard, then generate again.</p></div>`;
+      html += `<div class="panel"><p class="empty-state">Log this month's income on the dashboard, then generate again.</p></div>`;
       output.innerHTML = html;
       return;
     }
@@ -794,7 +832,7 @@
         <h2>Recommended allocations</h2>
         <p class="panel-sub">Investable this month: <strong>${formatTZS(plan.investable_amount_tzs)}</strong></p>
         ${allocations.length === 0
-          ? '<p class="empty-state">Nothing left to allocate once the emergency fund is funded.</p>'
+          ? '<p class="empty-state">Nothing to allocate yet — see the note at the top of this page.</p>'
           : `
           <table>
             <thead>
