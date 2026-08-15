@@ -4,20 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Msumari Investments — Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #26312B;
-    --ink-soft: #5B6B62;
-    --parchment: #F4F0E4;
-    --parchment-line: #E3DBC7;
-    --forest: #1B4332;
-    --forest-deep: #123023;
-    --gold: #B9873A;
-    --gold-soft: #E8D5AC;
-    --error: #A23B3B;
-    --income: #1B4332;
-    --expense: #A23B3B;
-    --radius: 3px;
+    --ink: #1B2A4A;
+    --ink-soft: #5A6B85;
+    --paper: #F5F6F2;
+    --paper-panel: #FFFFFF;
+    --grid-line: #C9D2DE;
+    --copper: #B87333;
+    --copper-deep: #96592A;
+    --income: #2F6F62;
+    --expense: #A6432C;
+    --income-bg: #E8F1EE;
+    --expense-bg: #F7EAE6;
+    --radius: 4px;
+    --sidebar-w: 220px;
+
+    --font-display: "Space Grotesk", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-body: "IBM Plex Sans", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", "Courier New", Courier, monospace;
   }
 
   * { box-sizing: border-box; }
@@ -25,220 +33,306 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background: var(--parchment);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    font-family: var(--font-body);
     color: var(--ink);
-  }
-
-  .topbar {
-    background: var(--forest);
-    background-image: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
-    padding: 18px 24px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
 
-  .topbar-title {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-weight: 700;
-    font-size: 19px;
-    color: #F4F0E4;
-    margin: 0;
-  }
-
-  .topbar-user {
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--ink);
+    background-image: linear-gradient(180deg, #1B2A4A 0%, #14203A 100%);
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-direction: column;
+    padding: 22px 16px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
   }
 
-  .topbar-user span {
-    font-size: 13px;
-    color: var(--gold-soft);
-    font-family: "Courier New", Courier, monospace;
+  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 6px 26px; border-bottom: 1px solid rgba(245,246,242,0.12); margin-bottom: 20px; }
+  .brand-mark { width: 34px; height: 34px; flex-shrink: 0; }
+  .brand-text { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: #F5F6F2; line-height: 1.2; }
+  .brand-text span { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper); margin-top: 2px; }
+
+  .nav-links { display: flex; flex-direction: column; gap: 2px; }
+  .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius); color: rgba(245,246,242,0.65); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: background 0.15s ease, color 0.15s ease; }
+  .nav-link:hover { background: rgba(245,246,242,0.06); color: #F5F6F2; }
+  .nav-link.active { background: rgba(184,115,51,0.18); color: #F5F6F2; box-shadow: inset 3px 0 0 var(--copper); }
+  .nav-tick { width: 4px; height: 4px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+
+  .sidebar-spacer { flex: 1; }
+  .user-block { border-top: 1px solid rgba(245,246,242,0.12); padding-top: 14px; margin-top: 8px; }
+  .user-name { font-family: var(--font-mono); font-size: 11.5px; color: rgba(245,246,242,0.55); padding: 0 12px 10px; }
+  .logout-btn { width: 100%; background: none; border: 1px solid rgba(245,246,242,0.2); color: #F5F6F2; padding: 9px 12px; border-radius: var(--radius); font-size: 12.5px; cursor: pointer; font-family: var(--font-body); font-weight: 500; }
+  .logout-btn:hover { background: rgba(245,246,242,0.08); }
+
+  .main { flex: 1; padding: 36px 44px 60px; max-width: 1100px; }
+
+  .page-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 6px; }
+  .page-title { font-family: var(--font-display); font-weight: 700; font-size: 26px; margin: 0 0 4px; }
+  .page-sub { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-soft); margin: 0; }
+
+  .add-btn { background: var(--copper); color: #fff; border: none; padding: 11px 20px; border-radius: var(--radius); font-family: var(--font-body); font-size: 13.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .add-btn:hover { background: var(--copper-deep); }
+  .add-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .add-btn svg { width: 14px; height: 14px; }
+
+  .tick-divider {
+    height: 8px; margin: 16px 0 32px;
+    background-image: repeating-linear-gradient(to right, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 12px);
+    background-position: bottom; background-size: 100% 8px; background-repeat: repeat-x; border-bottom: 1px solid var(--grid-line);
   }
 
-  .topbar-link {
-    color: var(--gold-soft);
-    text-decoration: none;
-    font-size: 13px;
-    font-family: "Courier New", Courier, monospace;
-    letter-spacing: 0.03em;
-    border-bottom: 1px solid transparent;
-    padding-bottom: 2px;
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 22px; }
+  .summary-card { background: var(--paper-panel); border: 1px solid var(--grid-line); border-radius: var(--radius); padding: 20px 22px; position: relative; }
+  .summary-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--grid-line); border-radius: var(--radius) var(--radius) 0 0; }
+  .summary-card.income::before { background: var(--income); }
+  .summary-card.expense::before { background: var(--expense); }
+  .summary-card.accent::before { background: var(--copper); }
+  .summary-label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin: 6px 0 10px; font-weight: 500; }
+  .summary-value { font-family: var(--font-mono); font-size: 26px; font-weight: 600; margin: 0; letter-spacing: -0.01em; text-transform: capitalize; }
+  .summary-value.income { color: var(--income); }
+  .summary-value.expense { color: var(--expense); }
+
+  .panel { background: var(--paper-panel); border: 1px solid var(--grid-line); border-radius: var(--radius); padding: 26px 28px; margin-bottom: 22px; }
+  .panel h2 { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin: 0 0 6px; }
+  .panel-sub { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 20px; }
+  .panel p { font-size: 13.5px; margin: 0 0 8px; color: var(--ink-soft); }
+  .panel p strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Collapsible settings ---------- */
+
+  .panel-toggle {
+    width: 100%; background: none; border: none; padding: 0; margin: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; font-family: inherit; color: var(--ink); text-align: left;
   }
+  .panel-toggle:focus-visible { outline: 2px solid var(--copper); outline-offset: 4px; }
+  .panel-toggle .chev { font-family: var(--font-mono); font-size: 11px; color: var(--ink-soft); transition: transform 0.15s ease; }
+  .panel-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .panel-body { display: none; padding-top: 22px; }
+  .panel-body.open { display: block; }
 
-  .topbar-link:hover { border-bottom-color: var(--gold-soft); }
-
-  .logout-btn {
-    background: none;
-    border: 1px solid rgba(244,240,228,0.35);
-    color: #F4F0E4;
-    padding: 7px 14px;
-    border-radius: var(--radius);
-    font-size: 12.5px;
-    cursor: pointer;
-    font-family: inherit;
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+  .field label { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; font-weight: 500; }
+  .field input, .field select {
+    width: 100%; padding: 10px 11px; font-family: var(--font-body); font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--grid-line); border-radius: var(--radius);
   }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--copper); box-shadow: 0 0 0 3px rgba(184,115,51,0.14); }
+  .field .hint { font-size: 11.5px; color: var(--ink-soft); margin: 5px 0 0; }
 
-  .logout-btn:hover { background: rgba(244,240,228,0.1); }
+  .seg { display: flex; gap: 8px; }
+  .seg-btn { flex: 1; padding: 10px; border: 1px solid var(--grid-line); background: var(--paper); border-radius: var(--radius); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-soft); text-transform: capitalize; }
+  .seg-btn.active { background: var(--copper); border-color: var(--copper); color: #fff; }
+  .seg-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
-  .wrap {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 28px 20px 60px;
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 8px 14px; border: 1px solid var(--grid-line); background: var(--paper);
+    border-radius: 999px; font-family: var(--font-body); font-size: 12.5px; font-weight: 500;
+    cursor: pointer; color: var(--ink-soft);
   }
+  .chip.active { background: rgba(184,115,51,0.12); border-color: var(--copper); color: var(--copper-deep); font-weight: 600; }
+  .chip:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
 
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-  }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); padding: 0 8px 10px; border-bottom: 1px solid var(--grid-line); }
+  td { padding: 12px 8px; border-bottom: 1px solid var(--grid-line); vertical-align: top; }
+  td.amount { text-align: right; font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+  tr.cleared td { color: var(--ink-soft); text-decoration: line-through; }
+  tr.cleared td.actions { text-decoration: none; }
 
-  .summary-card {
-    background: #FBF9F3;
-    border: 1px solid var(--parchment-line);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-  }
+  .del-btn { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 12px; font-family: var(--font-mono); text-decoration: underline; padding: 0; }
+  .del-btn:hover { color: var(--copper-deep); }
 
-  .summary-label {
-    font-family: "Courier New", Courier, monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin: 0 0 8px;
-  }
+  .exec-tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; border-radius: var(--radius); background: var(--paper); color: var(--ink-soft); margin-top: 3px; }
+  .source-tag { display: inline-block; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: var(--radius); background: rgba(184,115,51,0.12); color: var(--copper-deep); margin-left: 8px; vertical-align: middle; }
 
-  .summary-value {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-    text-transform: capitalize;
-  }
+  .message-box { background: var(--income-bg); border: 1px solid #C3DCD5; border-radius: var(--radius); padding: 12px 14px; font-size: 13px; color: var(--income); margin-bottom: 14px; }
+  .message-box.alert { background: var(--expense-bg); border-color: #E3C4B8; color: var(--expense); }
 
-  .panel {
-    background: #FBF9F3;
-    border: 1px solid var(--parchment-line);
-    border-radius: var(--radius);
-    padding: 22px 24px;
-    margin-bottom: 20px;
-  }
+  .empty-state { text-align: center; color: var(--ink-soft); font-size: 13.5px; padding: 30px 0; }
 
-  .panel h2 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 16px;
-    margin: 0 0 14px;
-  }
+  .status { margin-top: 14px; padding: 11px 13px; border-radius: var(--radius); font-size: 13px; display: none; }
+  .status.show { display: block; }
+  .status.error { background: var(--expense-bg); color: var(--expense); border: 1px solid #E3C4B8; }
+  .status.ok { background: var(--income-bg); color: var(--income); border: 1px solid #C3DCD5; }
 
-  .panel p {
-    font-size: 13.5px;
-    margin: 0 0 8px;
-    color: var(--ink-soft);
-  }
+  .disclaimer { font-size: 11.5px; color: var(--ink-soft); line-height: 1.5; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--grid-line); }
 
-  .panel p strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
+  .row-actions { display: flex; gap: 10px; align-items: flex-end; }
+  .row-actions .field { flex: 1; }
 
-  .message-box {
-    background: var(--gold-soft);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--forest-deep);
-    margin-bottom: 14px;
-  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
-  .message-box.alert {
-    background: #FBEAEA;
-    border-color: var(--error);
-    color: var(--error);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  th {
-    text-align: left;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    padding: 0 8px 10px;
-    border-bottom: 1px solid var(--parchment-line);
-  }
-
-  td {
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--parchment-line);
-    vertical-align: top;
-  }
-
-  td.amount {
-    text-align: right;
-    font-family: "Courier New", Courier, monospace;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .exec-tag {
-    display: inline-block;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: var(--radius);
-    background: var(--parchment);
-    color: var(--ink-soft);
-    margin-top: 3px;
-  }
-
-  .empty-state {
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 13.5px;
-    padding: 20px 0;
-  }
-
-  .disclaimer {
-    font-size: 11.5px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--parchment-line);
-  }
-
-  @media (max-width: 560px) {
+  @media (max-width: 860px) {
+    body { flex-direction: column; }
+    .sidebar { width: 100%; min-height: auto; position: static; flex-direction: row; align-items: center; padding: 12px 16px; }
+    .brand { border: none; padding: 0; margin: 0; margin-right: auto; }
+    .nav-links { flex-direction: row; }
+    .sidebar-spacer { display: none; }
+    .user-block { border: none; padding: 0; margin: 0; display: flex; align-items: center; gap: 10px; }
+    .user-name { display: none; }
+    .main { padding: 24px 18px 50px; }
+    .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
     .summary-grid { grid-template-columns: 1fr; }
+    .field-grid { grid-template-columns: 1fr; }
+    .row-actions { flex-direction: column; align-items: stretch; }
   }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <p class="topbar-title">Your plan</p>
-  <div class="topbar-user">
-    <a href="dashboard.html" class="topbar-link">Dashboard</a>
-    <span id="user-name-display">…</span>
+<div class="sidebar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="14" y="4" width="12" height="4" rx="1" fill="#B87333"/>
+      <rect x="18.4" y="8" width="3.2" height="19" fill="#B87333"/>
+      <path d="M18.4 27 L20 35 L21.6 27 Z" fill="#B87333"/>
+      <line x1="26" y1="11" x2="29" y2="11" stroke="#8FA0BE" stroke-width="1"/>
+      <line x1="26" y1="15" x2="28" y2="15" stroke="#8FA0BE" stroke-width="1"/>
+      <line x1="26" y1="19" x2="29" y2="19" stroke="#8FA0BE" stroke-width="1"/>
+      <line x1="26" y1="23" x2="28" y2="23" stroke="#8FA0BE" stroke-width="1"/>
+    </svg>
+    <div class="brand-text">Msumari<span>Nailed down</span></div>
+  </div>
+
+  <nav class="nav-links">
+    <a href="dashboard.html" class="nav-link"><span class="nav-tick"></span> Dashboard</a>
+    <a href="plan.html" class="nav-link active"><span class="nav-tick"></span> Plan</a>
+  </nav>
+
+  <div class="sidebar-spacer"></div>
+
+  <div class="user-block">
+    <p class="user-name" id="user-name-display">…</p>
     <button class="logout-btn" onclick="logout()">Sign out</button>
   </div>
 </div>
 
-<div class="wrap">
+<div class="main">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Plan</h1>
+      <p class="page-sub" id="page-sub">Where this month's surplus goes</p>
+    </div>
+    <button class="add-btn" id="generate-btn" onclick="generatePlan()">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Generate plan
+    </button>
+  </div>
+  <div class="tick-divider"></div>
+
+  <!-- Plan output -->
   <div id="plan-output">
     <p class="empty-state">Loading your plan…</p>
   </div>
+
+  <!-- Settings -->
+  <div class="panel">
+    <button class="panel-toggle" id="settings-toggle" aria-expanded="false" aria-controls="settings-body" onclick="togglePanel('settings')">
+      <span>
+        <h2>Plan settings</h2>
+        <p class="panel-sub" id="settings-summary" style="margin:0;">Risk, household and emergency fund</p>
+      </span>
+      <span class="chev">▶</span>
+    </button>
+
+    <div class="panel-body" id="settings-body">
+      <div class="field" style="margin-bottom:18px;">
+        <label>Risk preference</label>
+        <div class="seg" id="risk-seg">
+          <button type="button" class="seg-btn" data-risk="conservative" onclick="setRisk('conservative')">Conservative</button>
+          <button type="button" class="seg-btn" data-risk="moderate" onclick="setRisk('moderate')">Moderate</button>
+          <button type="button" class="seg-btn" data-risk="aggressive" onclick="setRisk('aggressive')">Aggressive</button>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:18px;">
+        <label>Household factors</label>
+        <div class="chips" id="factor-chips">
+          <button type="button" class="chip" data-flag="self_employed" onclick="toggleFlag('self_employed')">Self-employed</button>
+          <button type="button" class="chip" data-flag="irregular_income" onclick="toggleFlag('irregular_income')">Irregular income</button>
+          <button type="button" class="chip" data-flag="single_household_income" onclick="toggleFlag('single_household_income')">Single income</button>
+          <button type="button" class="chip" data-flag="employment_uncertain" onclick="toggleFlag('employment_uncertain')">Uncertain employment</button>
+        </div>
+        <p class="hint">Each factor raises the emergency fund target, up to nine months.</p>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label for="dependants">Dependants</label>
+          <input type="number" id="dependants" min="0" step="1" value="0">
+        </div>
+        <div class="field">
+          <label for="ef-source">Emergency fund figure</label>
+          <select id="ef-source" onchange="onSourceChange()">
+            <option value="manual">Entered by me</option>
+            <option value="ledger">Tracked from a category</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div class="field" id="ef-manual-field">
+          <label for="ef-balance">Emergency fund balance (TZS)</label>
+          <input type="number" id="ef-balance" min="0" step="1" value="0">
+        </div>
+        <div class="field" id="ef-category-field" style="display:none;">
+          <label for="ef-category">Category to track</label>
+          <select id="ef-category"><option value="">Choose a category</option></select>
+          <p class="hint">Money in counts as an expense, money out as income.</p>
+        </div>
+      </div>
+
+      <button class="add-btn" style="width:auto;" id="save-settings-btn" onclick="saveSettings()">Save settings</button>
+      <div class="status" id="settings-status" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- Debts -->
+  <div class="panel">
+    <button class="panel-toggle" id="debts-toggle" aria-expanded="false" aria-controls="debts-body" onclick="togglePanel('debts')">
+      <span>
+        <h2>Debts</h2>
+        <p class="panel-sub" id="debts-summary" style="margin:0;">Loading…</p>
+      </span>
+      <span class="chev">▶</span>
+    </button>
+
+    <div class="panel-body" id="debts-body">
+      <div id="debts-table-wrap"></div>
+
+      <div class="row-actions" style="margin-top:18px;">
+        <div class="field">
+          <label for="debt-name">Name</label>
+          <input type="text" id="debt-name" placeholder="Mobile loan">
+        </div>
+        <div class="field">
+          <label for="debt-balance">Balance (TZS)</label>
+          <input type="number" id="debt-balance" min="0" step="1" placeholder="400000">
+        </div>
+        <div class="field">
+          <label for="debt-rate">Annual rate (%)</label>
+          <input type="number" id="debt-rate" min="0" step="0.1" placeholder="22.5">
+        </div>
+        <button class="add-btn" style="height:40px;" onclick="addDebt()">Add debt</button>
+      </div>
+
+      <p class="hint" style="margin-top:10px;">Debts at 15% or above are cleared before any growth allocation.</p>
+      <div class="status" id="debts-status" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <p class="disclaimer">
+    This is planning output based on your own ledger data, not personalised investment advice.
+    Product minimums, tax treatment and availability can change — verify current terms with the
+    provider before acting.
+  </p>
 </div>
 
 <script>
@@ -249,11 +343,22 @@
     window.location.href = 'index.html';
   }
 
+  let profile = null;
+  let debts = [];
+
+  /* ---------- helpers ---------- */
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function authHeaders() {
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    };
+    return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
   }
 
   async function handleAuthFailure(res) {
@@ -274,6 +379,22 @@
     return 'TZS ' + Number(amount || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
   }
 
+  function showStatus(id, message, type) {
+    const el = document.getElementById(id);
+    el.textContent = message;
+    el.className = 'status show ' + type;
+    setTimeout(() => { el.className = 'status'; }, 4000);
+  }
+
+  function togglePanel(name) {
+    const body = document.getElementById(name + '-body');
+    const toggle = document.getElementById(name + '-toggle');
+    const open = body.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  /* ---------- user ---------- */
+
   async function loadUser() {
     try {
       const res = await fetch(API_BASE + '/api/auth/me', { headers: authHeaders() });
@@ -285,105 +406,378 @@
     }
   }
 
-  async function loadPlan() {
-    const output = document.getElementById('plan-output');
+  /* ---------- settings ---------- */
 
-    try {
-      const res = await fetch(API_BASE + '/api/transactions/summary', { headers: authHeaders() });
-      if (await handleAuthFailure(res)) return;
-      const summary = await res.json();
+  function setRisk(risk) {
+    if (!profile) return;
+    profile.risk_preference = risk;
+    document.querySelectorAll('#risk-seg .seg-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.risk === risk);
+    });
+  }
 
-      const planRes = await fetch(API_BASE + '/api/plans/generate', {
-        method: 'POST',
-        headers: authHeaders(),
-        body: JSON.stringify({
-          monthly_income: summary.total_income,
-          monthly_expenses: summary.total_expenses
-        })
+  function toggleFlag(flag) {
+    if (!profile) return;
+    profile[flag] = !profile[flag];
+    document.querySelector(`#factor-chips .chip[data-flag="${flag}"]`)
+      .classList.toggle('active', profile[flag]);
+  }
+
+  function onSourceChange() {
+    const source = document.getElementById('ef-source').value;
+    document.getElementById('ef-manual-field').style.display = source === 'manual' ? '' : 'none';
+    document.getElementById('ef-category-field').style.display = source === 'ledger' ? '' : 'none';
+  }
+
+  function renderSettings() {
+    setRisk(profile.risk_preference);
+    ['self_employed', 'irregular_income', 'single_household_income', 'employment_uncertain']
+      .forEach(flag => {
+        document.querySelector(`#factor-chips .chip[data-flag="${flag}"]`)
+          .classList.toggle('active', !!profile[flag]);
       });
 
-      if (await handleAuthFailure(planRes)) return;
-      const snapshot = await planRes.json();
+    document.getElementById('dependants').value = profile.dependants || 0;
+    document.getElementById('ef-balance').value = profile.emergency_fund_balance || 0;
+    document.getElementById('ef-source').value = profile.emergency_fund_source || 'manual';
+    onSourceChange();
 
-      if (!planRes.ok) {
-        output.innerHTML = `<div class="message-box alert">${snapshot.error || 'Could not generate a plan.'}</div>`;
-        return;
-      }
+    const active = [];
+    if (profile.self_employed) active.push('self-employed');
+    if (profile.irregular_income) active.push('irregular income');
+    if (profile.single_household_income) active.push('single income');
+    if (profile.employment_uncertain) active.push('uncertain employment');
+    if (profile.dependants > 0) active.push(profile.dependants + ' dependant(s)');
 
-      // The actual plan fields are nested under .result, not top-level.
-      const plan = snapshot.result;
-      renderPlan(plan);
+    document.getElementById('settings-summary').textContent =
+      profile.risk_preference.charAt(0).toUpperCase() + profile.risk_preference.slice(1) +
+      (active.length ? ' · ' + active.join(', ') : ' · no household factors');
+  }
 
+  async function loadProfile() {
+    try {
+      const res = await fetch(API_BASE + '/api/plans/profile', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      profile = await res.json();
+      renderSettings();
     } catch (err) {
-      console.error('Failed to load plan', err);
-      output.innerHTML = '<p class="empty-state">Could not reach the server. It may be starting up — try again shortly.</p>';
+      showStatus('settings-status', 'Could not load your settings.', 'error');
     }
   }
 
-  function renderPlan(plan) {
+  async function loadCategories() {
+    try {
+      const res = await fetch(API_BASE + '/api/categories?type=expense', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      const categories = await res.json();
+      const select = document.getElementById('ef-category');
+      select.innerHTML = '<option value="">Choose a category</option>' +
+        categories.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+      if (profile && profile.emergency_fund_category_id) {
+        select.value = profile.emergency_fund_category_id;
+      }
+    } catch (err) {
+      /* category list is optional */
+    }
+  }
+
+  async function saveSettings() {
+    const btn = document.getElementById('save-settings-btn');
+    const source = document.getElementById('ef-source').value;
+    const categoryId = document.getElementById('ef-category').value;
+
+    if (source === 'ledger' && !categoryId) {
+      showStatus('settings-status', 'Choose a category to track, or switch back to entering the figure yourself.', 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    const payload = {
+      risk_preference: profile.risk_preference,
+      dependants: Number(document.getElementById('dependants').value) || 0,
+      self_employed: !!profile.self_employed,
+      irregular_income: !!profile.irregular_income,
+      single_household_income: !!profile.single_household_income,
+      employment_uncertain: !!profile.employment_uncertain,
+      emergency_fund_balance: Number(document.getElementById('ef-balance').value) || 0,
+      emergency_fund_source: source,
+      emergency_fund_category_id: categoryId ? Number(categoryId) : null
+    };
+
+    try {
+      const res = await fetch(API_BASE + '/api/plans/profile', {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        showStatus('settings-status', data.error || 'Could not save your settings.', 'error');
+        return;
+      }
+
+      profile = data;
+      renderSettings();
+      showStatus('settings-status', 'Settings saved. Generate the plan to apply them.', 'ok');
+    } catch (err) {
+      showStatus('settings-status', 'Could not reach the server.', 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  /* ---------- debts ---------- */
+
+  function renderDebts() {
+    const wrap = document.getElementById('debts-table-wrap');
+    const active = debts.filter(d => !d.cleared);
+
+    document.getElementById('debts-summary').textContent = active.length === 0
+      ? 'No debts recorded'
+      : active.length + ' active · ' + formatTZS(active.reduce((sum, d) => sum + d.balance_tzs, 0));
+
+    if (debts.length === 0) {
+      wrap.innerHTML = '<p class="empty-state">No debts recorded. Add one below if you carry any.</p>';
+      return;
+    }
+
+    wrap.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Debt</th>
+            <th style="text-align:right">Balance</th>
+            <th style="text-align:right">Rate</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${debts.map(d => `
+            <tr class="${d.cleared ? 'cleared' : ''}">
+              <td>${escapeHtml(d.name)}</td>
+              <td class="amount">${formatTZS(d.balance_tzs)}</td>
+              <td class="amount">${escapeHtml(d.annual_interest_rate_pct)}%</td>
+              <td class="actions">
+                ${d.cleared
+                  ? `<button class="del-btn" onclick="reopenDebt(${d.id})">Reopen</button>`
+                  : `<button class="del-btn" onclick="clearDebt(${d.id})">Mark cleared</button>`}
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  async function loadDebts() {
+    try {
+      const res = await fetch(API_BASE + '/api/plans/debts?include_cleared=1', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      debts = await res.json();
+      renderDebts();
+    } catch (err) {
+      document.getElementById('debts-summary').textContent = 'Could not load debts';
+    }
+  }
+
+  async function addDebt() {
+    const name = document.getElementById('debt-name').value.trim();
+    const balance = document.getElementById('debt-balance').value;
+    const rate = document.getElementById('debt-rate').value;
+
+    if (!name) {
+      showStatus('debts-status', 'Give the debt a name.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch(API_BASE + '/api/plans/debts', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({
+          name,
+          balance_tzs: Number(balance) || 0,
+          annual_interest_rate_pct: Number(rate) || 0
+        })
+      });
+      if (await handleAuthFailure(res)) return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        showStatus('debts-status', data.error || 'Could not add the debt.', 'error');
+        return;
+      }
+
+      document.getElementById('debt-name').value = '';
+      document.getElementById('debt-balance').value = '';
+      document.getElementById('debt-rate').value = '';
+      showStatus('debts-status', 'Debt added. Generate the plan to apply it.', 'ok');
+      loadDebts();
+    } catch (err) {
+      showStatus('debts-status', 'Could not reach the server.', 'error');
+    }
+  }
+
+  async function clearDebt(id) {
+    const debt = debts.find(d => d.id === id);
+    if (!debt) return;
+    if (!confirm(`Mark "${debt.name}" as cleared? It stays in your history but stops affecting new plans.`)) return;
+
+    try {
+      const res = await fetch(API_BASE + '/api/plans/debts/' + id, {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+      if (await handleAuthFailure(res)) return;
+      showStatus('debts-status', 'Debt cleared.', 'ok');
+      loadDebts();
+    } catch (err) {
+      showStatus('debts-status', 'Could not reach the server.', 'error');
+    }
+  }
+
+  async function reopenDebt(id) {
+    try {
+      const res = await fetch(API_BASE + '/api/plans/debts/' + id, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ cleared: false })
+      });
+      if (await handleAuthFailure(res)) return;
+      showStatus('debts-status', 'Debt reopened.', 'ok');
+      loadDebts();
+    } catch (err) {
+      showStatus('debts-status', 'Could not reach the server.', 'error');
+    }
+  }
+
+  /* ---------- plan ---------- */
+
+  async function loadLatestPlan() {
     const output = document.getElementById('plan-output');
+    try {
+      const res = await fetch(API_BASE + '/api/plans/history', { headers: authHeaders() });
+      if (await handleAuthFailure(res)) return;
+      const snapshots = await res.json();
+
+      if (!snapshots.length) {
+        output.innerHTML = '<div class="panel"><p class="empty-state">No plan yet. Press <strong>Generate plan</strong> once your settings look right.</p></div>';
+        return;
+      }
+
+      renderPlan(snapshots[0]);
+    } catch (err) {
+      output.innerHTML = '<div class="panel"><p class="empty-state">Could not reach the server. It may be starting up — try again shortly.</p></div>';
+    }
+  }
+
+  async function generatePlan() {
+    const btn = document.getElementById('generate-btn');
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(API_BASE + '/api/plans/generate', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: '{}'
+      });
+      if (await handleAuthFailure(res)) return;
+      const snapshot = await res.json();
+
+      if (!res.ok) {
+        document.getElementById('plan-output').innerHTML =
+          `<div class="message-box alert">${escapeHtml(snapshot.error || 'Could not generate a plan.')}</div>`;
+        return;
+      }
+
+      renderPlan(snapshot);
+    } catch (err) {
+      document.getElementById('plan-output').innerHTML =
+        '<div class="message-box alert">Could not reach the server. It may be starting up — try again shortly.</div>';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function sourceLabel(source) {
+    if (source === 'ledger') return '<span class="source-tag">from ledger</span>';
+    if (source === 'request_override') return '<span class="source-tag">overridden</span>';
+    return '';
+  }
+
+  function renderPlan(snapshot) {
+    const output = document.getElementById('plan-output');
+    const plan = snapshot.result || {};
+    const sources = (snapshot.input && snapshot.input._sources) || {};
     let html = '';
 
-    // Top-level messages (e.g. surplus notes, gate explanations)
+    if (snapshot.created_at) {
+      const when = new Date(snapshot.created_at);
+      document.getElementById('page-sub').textContent =
+        'Generated ' + when.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) +
+        ' at ' + when.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    }
+
     (plan.messages || []).forEach(msg => {
-      html += `<div class="message-box">${msg}</div>`;
+      html += `<div class="message-box">${escapeHtml(msg)}</div>`;
     });
 
     html += `
       <div class="summary-grid">
-        <div class="summary-card">
-          <p class="summary-label">Risk Profile</p>
-          <p class="summary-value">${plan.risk_profile || '—'}</p>
+        <div class="summary-card accent">
+          <p class="summary-label">Risk profile</p>
+          <p class="summary-value">${escapeHtml(plan.risk_profile || '—')}</p>
         </div>
         <div class="summary-card">
-          <p class="summary-label">Savings Tier</p>
-          <p class="summary-value">${plan.savings_tier || '—'}</p>
+          <p class="summary-label">Savings tier</p>
+          <p class="summary-value">${escapeHtml((plan.savings_tier || '—').replace(/_/g, ' '))}</p>
         </div>
-        <div class="summary-card">
-          <p class="summary-label">Net Monthly Savings</p>
-          <p class="summary-value">${formatTZS(plan.net_monthly_savings_tzs)}</p>
+        <div class="summary-card ${plan.net_monthly_savings_tzs >= 0 ? 'income' : 'expense'}">
+          <p class="summary-label">Net monthly savings</p>
+          <p class="summary-value ${plan.net_monthly_savings_tzs >= 0 ? 'income' : 'expense'}">${formatTZS(plan.net_monthly_savings_tzs)}</p>
         </div>
       </div>
     `;
 
-    // Cash-flow deficit: nothing else to show
     if (plan.status === 'cash_flow_deficit') {
-      html += `<div class="panel"><p class="empty-state">Log some income to see an allocation plan — expenses currently exceed income.</p></div>`;
+      html += `<div class="panel"><p class="empty-state">Expenses currently match or exceed income, so there is nothing to allocate. Log this month's income on the dashboard, then generate again.</p></div>`;
       output.innerHTML = html;
       return;
     }
 
-    // Emergency fund block — always present
     const ef = plan.emergency_fund || {};
+    const reasons = (ef.target_months_reasons || []).map(escapeHtml).join(', ');
     html += `
       <div class="panel">
-        <h2>Emergency Fund</h2>
-        <p><strong>Status:</strong> ${ef.status}</p>
-        <p><strong>Target:</strong> ${ef.target_months} months of expenses (${formatTZS(ef.target_tzs)})</p>
-        <p><strong>Current balance:</strong> ${formatTZS(ef.current_balance_tzs)}</p>
+        <h2>Emergency fund</h2>
+        <p class="panel-sub">${ef.status === 'sufficient' ? 'Fully funded' : 'Building up'}</p>
+        <p><strong>Target:</strong> ${escapeHtml(ef.target_months)} months of expenses (${formatTZS(ef.target_tzs)})${reasons ? ` — ${reasons}` : ''}</p>
+        <p><strong>Current balance:</strong> ${formatTZS(ef.current_balance_tzs)}${sourceLabel(sources.emergency_fund_balance)}</p>
         ${ef.deficit_tzs > 0 ? `<p><strong>Still needed:</strong> ${formatTZS(ef.deficit_tzs)}</p>` : ''}
         ${ef.surplus_tzs > 0 ? `<p><strong>Surplus above target:</strong> ${formatTZS(ef.surplus_tzs)}</p>` : ''}
         ${plan.emergency_contribution && plan.emergency_contribution.monthly_amount_tzs > 0
-          ? `<p><strong>This month's contribution:</strong> ${formatTZS(plan.emergency_contribution.monthly_amount_tzs)} → ${plan.emergency_contribution.instrument || ''}</p>`
+          ? `<p><strong>This month:</strong> ${formatTZS(plan.emergency_contribution.monthly_amount_tzs)} → ${escapeHtml(plan.emergency_contribution.instrument || '')}</p>`
           : ''}
       </div>
     `;
 
-    // Debt repayment priority: blocks growth allocations
     if (plan.status === 'debt_repayment_priority') {
-      const debts = (plan.debt_repayment && plan.debt_repayment.blocking_debts) || [];
+      const blocking = (plan.debt_repayment && plan.debt_repayment.blocking_debts) || [];
       html += `
         <div class="panel">
-          <h2>High-Interest Debt — Priority</h2>
-          <p>Clear this debt before any growth allocation. Only the emergency buffer above is funded this month.</p>
-          <table>
+          <h2>High-interest debt comes first</h2>
+          <p class="panel-sub">Clear these before any growth allocation. Only the emergency buffer above is funded this month.</p>
+          <p><strong>Towards repayment this month:</strong> ${formatTZS(plan.debt_repayment.monthly_amount_tzs)}</p>
+          <table style="margin-top:16px;">
             <thead><tr><th>Debt</th><th style="text-align:right">Balance</th><th style="text-align:right">Rate</th></tr></thead>
             <tbody>
-              ${debts.map(d => `
+              ${blocking.map(d => `
                 <tr>
-                  <td>${d.name}</td>
+                  <td>${escapeHtml(d.name)}</td>
                   <td class="amount">${formatTZS(d.balance_tzs)}</td>
-                  <td class="amount">${d.annual_interest_rate_pct}%</td>
+                  <td class="amount">${escapeHtml(d.annual_interest_rate_pct)}%</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -394,14 +788,13 @@
       return;
     }
 
-    // Normal path: allocations table
     const allocations = plan.allocations || [];
     html += `
       <div class="panel">
-        <h2>Recommended Allocations</h2>
-        <p><strong>Investable this month:</strong> ${formatTZS(plan.investable_amount_tzs)}</p>
+        <h2>Recommended allocations</h2>
+        <p class="panel-sub">Investable this month: <strong>${formatTZS(plan.investable_amount_tzs)}</strong></p>
         ${allocations.length === 0
-          ? '<p class="empty-state">No allocations to show yet.</p>'
+          ? '<p class="empty-state">Nothing left to allocate once the emergency fund is funded.</p>'
           : `
           <table>
             <thead>
@@ -415,12 +808,12 @@
               ${allocations.map(a => `
                 <tr>
                   <td>
-                    ${a.instrument}
+                    ${escapeHtml(a.instrument)}
                     ${a.execution && a.execution !== 'eligible_for_allocation'
-                      ? `<br><span class="exec-tag">${a.execution.replace(/_/g, ' ')}</span>`
+                      ? `<br><span class="exec-tag">${escapeHtml(a.execution.replace(/_/g, ' '))}</span>`
                       : ''}
                   </td>
-                  <td class="amount">${a.portfolio_percentage}%</td>
+                  <td class="amount">${escapeHtml(a.portfolio_percentage)}%</td>
                   <td class="amount">${formatTZS(a.monthly_amount_tzs)}</td>
                 </tr>
               `).join('')}
@@ -428,19 +821,20 @@
           </table>
         `}
       </div>
-
-      <p class="disclaimer">
-        This is planning output based on your own ledger data, not personalised investment advice.
-        Product minimums, tax treatment and availability can change — verify current terms with the
-        provider before acting.
-      </p>
     `;
 
     output.innerHTML = html;
   }
 
-  loadUser();
-  loadPlan();
+  /* ---------- boot ---------- */
+
+  (async function init() {
+    loadUser();
+    await loadProfile();
+    loadCategories();
+    loadDebts();
+    loadLatestPlan();
+  })();
 </script>
 
 </body>
